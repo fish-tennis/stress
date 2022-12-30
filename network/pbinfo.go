@@ -129,45 +129,4 @@ func (info *AppPb) Init() {
 		}
 		return true
 	})
-
-	info.GetMsgDefault("LoginReq")
-}
-
-// proto.Message -> map[string]interface{}
-func ConvertProtoToMap(protoMessage proto.Message) map[string]interface{} {
-	stringMap := make(map[string]interface{})
-	typ := reflect.TypeOf(protoMessage).Elem()
-	val := reflect.ValueOf(protoMessage).Elem()
-	for i := 0; i < typ.NumField(); i++ {
-		sf := typ.Field(i)
-		if len(sf.Tag) == 0 {
-			continue
-		}
-		var v interface{}
-		fieldVal := val.Field(i)
-		switch fieldVal.Kind() {
-		case reflect.Slice:
-			if fieldVal.Type().Elem().Kind() == reflect.Uint8 {
-				v = fieldVal.Bytes()
-			} else {
-				v = fieldVal.Interface()
-			}
-		case reflect.Interface, reflect.Ptr, reflect.Map:
-			v = fieldVal.Interface()
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			v = fieldVal.Interface()
-		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			v = fieldVal.Interface()
-		case reflect.Float32, reflect.Float64:
-			v = fieldVal.Interface()
-		case reflect.String:
-			v = fieldVal.Interface()
-		}
-		if v == nil {
-			logger.Debug(fmt.Sprintf("%v %v nil", sf.Name, fieldVal.Kind()))
-			continue
-		}
-		stringMap[sf.Name] = v
-	}
-	return stringMap
 }
