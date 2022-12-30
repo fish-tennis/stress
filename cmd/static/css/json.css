@@ -1,0 +1,6 @@
+.json-content {padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: purple; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: #8426ac; }

@@ -1,0 +1,148 @@
+{
+    "name": "test",
+    "description": "",
+    "data": {
+        "version": "0.3.0",
+        "scope": "project",
+        "selectedTree": "093ac47a-da42-422f-b8de-e4f0d88c755e",
+        "trees": [
+            {
+                "version": "0.3.0",
+                "scope": "tree",
+                "id": "093ac47a-da42-422f-b8de-e4f0d88c755e",
+                "title": "01 登陆",
+                "description": "",
+                "root": "8d33cb70-7ca3-410e-8efe-891e4b958b6a",
+                "properties": {
+                    "Run": 1
+                },
+                "nodes": {
+                    "8d33cb70-7ca3-410e-8efe-891e4b958b6a": {
+                        "id": "8d33cb70-7ca3-410e-8efe-891e4b958b6a",
+                        "name": "Sequence",
+                        "category": "composite",
+                        "title": "Sequence",
+                        "description": "",
+                        "properties": {},
+                        "display": {
+                            "x": 24,
+                            "y": -96
+                        },
+                        "children": [
+                            "916db8a0-8678-4f39-951c-5b69f66178cd",
+                            "7277a879-5b1b-4319-84dd-bd47ecddcc0a",
+                            "49d3d887-d8d0-4b5d-90f3-acbec7094d74",
+                            "3c8c1eb1-8edd-42a4-9eaa-7ef9e2e50311"
+                        ]
+                    },
+                    "7277a879-5b1b-4319-84dd-bd47ecddcc0a": {
+                        "id": "7277a879-5b1b-4319-84dd-bd47ecddcc0a",
+                        "name": "Worker",
+                        "category": "action",
+                        "title": "Login",
+                        "description": "账号登录",
+                        "properties": {
+                            "cd": 0
+                        },
+                        "display": {
+                            "x": 288,
+                            "y": -192
+                        }
+                    },
+                    "49d3d887-d8d0-4b5d-90f3-acbec7094d74": {
+                        "id": "49d3d887-d8d0-4b5d-90f3-acbec7094d74",
+                        "name": "Worker",
+                        "category": "action",
+                        "title": "Entry",
+                        "description": "角色登录",
+                        "properties": {
+                            "cd": 0
+                        },
+                        "display": {
+                            "x": 288,
+                            "y": -108
+                        }
+                    },
+                    "916db8a0-8678-4f39-951c-5b69f66178cd": {
+                        "id": "916db8a0-8678-4f39-951c-5b69f66178cd",
+                        "name": "StartAfter",
+                        "category": "action",
+                        "title": "StartAfter",
+                        "description": "等待x分钟后才开始运行后续节点\n当前时间为12:01:30 x=1 则 12:02:00 开始运行 等待30秒\n当前时间为12:01:50 x=1 则 12:02:00 开始运行 等待10秒",
+                        "properties": {
+                            "min": 0
+                        },
+                        "display": {
+                            "x": 300,
+                            "y": -276
+                        }
+                    },
+                    "3c8c1eb1-8edd-42a4-9eaa-7ef9e2e50311": {
+                        "id": "3c8c1eb1-8edd-42a4-9eaa-7ef9e2e50311",
+                        "name": "StartAfter",
+                        "category": "action",
+                        "title": "StartAfter",
+                        "description": "等待x分钟后才开始运行后续节点\n当前时间为12:01:30 x=1 则 12:02:00 开始运行 等待30秒\n当前时间为12:01:50 x=1 则 12:02:00 开始运行 等待10秒",
+                        "properties": {
+                            "min": 0
+                        },
+                        "display": {
+                            "x": 288,
+                            "y": 0
+                        }
+                    }
+                },
+                "display": {
+                    "camera_x": 492,
+                    "camera_y": 380.5,
+                    "camera_z": 1,
+                    "x": -156,
+                    "y": -96
+                }
+            }
+        ],
+        "custom_nodes": [
+            {
+                "version": "0.3.0",
+                "scope": "node",
+                "name": "RandMem",
+                "category": "composite",
+                "title": "Rand",
+                "description": null,
+                "properties": {}
+            },
+            {
+                "version": "0.3.0",
+                "scope": "node",
+                "name": "Rand",
+                "category": "composite",
+                "title": "Rand",
+                "description": "随机节点",
+                "properties": {}
+            },
+            {
+                "version": "0.3.0",
+                "scope": "node",
+                "name": "StartAfter",
+                "category": "action",
+                "title": "StartAfter",
+                "description": "等待x分钟后才开始运行后续节点\n当前时间为12:01:30 x=1 则 12:02:00 开始运行 等待30秒\n当前时间为12:01:50 x=1 则 12:02:00 开始运行 等待10秒",
+                "properties": {
+                    "min": 0
+                }
+            },
+            {
+                "version": "0.3.0",
+                "scope": "node",
+                "name": "Worker",
+                "category": "action",
+                "title": "Worker",
+                "description": "工作节点",
+                "properties": {
+                    "cd": 0
+                }
+            }
+        ]
+    },
+    "path": "E:\\gitee\\light\\nba\\conf\\robot.b3"
+}

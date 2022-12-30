@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <title>协议客户端</title>
+  <link data-n-head="ssr" rel="icon" type="image/x-icon" href="favicon.png">
+  <link rel="stylesheet" href="css/font-awesome.css">
+  <link rel="stylesheet" href="css/button.css">
+  <link rel="stylesheet" href="css/scroll.css">
+  <link rel="stylesheet" href="css/json.css">
+  <link rel="stylesheet" href="css/input.css">
+  <link rel="stylesheet" href="css/select2.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/element.css">
+</head>
+
+
+
+<body>
+
+
+  <div class="app">
+
+
+
+
+    <div id="tabs">
+      <el-tabs v-model="tabname" type="card" editable @edit="onEdit" @tab-click="onClickTab">
+        <el-tab-pane :key="item.id" v-for="(item, index) in tabs" :label="item.title" :name="item.name">
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+
+    <div class="status shadow-bottom" id="statusBar" v-model="bar">
+      <div class="status">
+        <span :class="bar.level">{{bar.status}}</span>
+        <span class="status-info">{{bar.info}}</span></span>
+      </div>
+    </div>
+
+
+
+    <div class="log">
+
+      <div id="logbox">
+        <logshow v-for="log in logs" v-bind:log="log" v-bind:key="log.id"></logshow>
+      </div>
+    </div>
+
+    <div id="logdialog">
+      <el-dialog :title="title" append-to-body="true" :visible.sync="show">
+        <div>
+          <template>
+            <v-jsoneditor ref="editor" v-model="json" :options="options" height="400px" @error="onError"></v-jsoneditor>
+          </template>
+        </div>
+      </el-dialog>
+    </div>
+
+
+
+
+    <div class="operate shadow-left" id="config">
+      <div class="header"></div>
+      <div style="margin-top: 8px"><strong>应用配置</strong></div>
+      <div class="button-group config">
+        <el-button type="primary" size="small" @click="onClickEditApp">编辑</el-button>
+        <el-button type="primary" size="small" @click="onClickReload">reload</el-button>
+
+      </div>
+      <div style="margin-top: 8px"><strong>登录服配置</strong></div>
+      <div class="button-group config">
+        <template>
+          <el-select v-model="servername" placeholder="请选择" @change=onServerNameChange>
+            <el-option v-for="(val,k) in servers" :key="k" :label="k" :value="k">
+            </el-option>
+          </el-select>
+        </template>
+        <el-button type="primary" size="small" icon="el-icon-edit" @click="onClickEditServer"></el-button>
+        <div class="demo-input-suffix">
+          账号：
+          <el-input v-model="account" @input="onAccountChange"></el-input>
+        </div>
+        <el-button type="primary" size="small" @click="onClickSelectZone">选择大区</el-button>
+        <el-button type="success" size="small" @click="onClickLogin">登录</el-button>
+        <el-button type="danger" size="small" @click="onClickStopRun">停止运行</el-button>
+      </div>
+
+      <div style="margin-top: 8px"><strong>日志</strong></div>
+      <div class="button-group log">
+        <el-button type="primary" size="small" @click="onClickClearLog">清屏</el-button>
+      </div>
+
+      <div style="margin-top: 8px"><strong>运行模式</strong></div>
+      <el-radio-group v-model="runMode" @change="onRunModeChange">
+        <el-radio label="normal">协议测试</el-radio>
+        <el-radio label="stress">压力测试</el-radio>
+      </el-radio-group>
+
+      <div class="压力测试" v-if="runMode == 'stress'">
+        <div style="margin-top: 8px"><strong>压测用例</strong></div>
+        <treebtn v-for="item in trees" v-bind:item="item" v-bind:cls=1 v-bind:key="item.id"></treebtn>
+      </div>
+
+
+      <!-- <div class="shortcut-common" v-for="(item, k) in commreqs" v-bind:key="item.id">
+      </div> -->
+      <div class="协议测试" v-if="runMode == 'normal'">
+        <div style="margin-top: 8px">
+          <strong> 通用请求 </strong>
+          <el-button type="primary" size="small" @click="onClickCreateReq('common')">新建</el-button>
+        </div>
+        <reqbtn v-for="item in commreqs" v-bind:item="item" v-bind:cls=1 v-bind:key="item.id"></reqbtn>
+
+        <div style="margin-top: 8px">
+          <strong>业务请求</strong>
+          <el-button type="primary" size="small" @click="onClickCreateReq('biz')">新建</el-button>
+        </div>
+        <div class="shortcut">
+          <template>
+            <div class="shortcut-select">
+              <el-select v-model="reqclass" placeholder="请选择" @change="onSelectClass">
+                <el-option v-for="k in classList" :key="k" :label="k" :value="k">
+                </el-option>
+              </el-select>
+            </div>
+
+          </template>
+          <div class="shortcut-btn">
+            <reqbtn v-for="item in bizreqs" v-bind:item="item" v-bind:cls="reqclass" v-bind:key="item.id"></reqbtn>
+          </div>
+        </div>
+      </div>
+
+
+
+
+    </div>
+
+
+
+    <div id="dialog" style="width: 100%">
+      <el-dialog v-bind:title="title" append-to-body="true" :visible.sync="show" width="50%">
+        <div id="dialogjson">
+          <template>
+            <v-jsoneditor ref="editor" v-model="json" :options="options" @error="onError"></v-jsoneditor>
+          </template>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="show = false">取 消</el-button>
+          <el-button type="primary" @click="onClick">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+
+    <div id="createReq" style="width: 100%">
+
+
+      <el-dialog :title="title" append-to-body="true" :visible.sync="show" width="50%">
+        <div id="dialog">
+          <div style="margin-bottom: 10px" v-if="showheader">
+            <el-select v-model="msgname" filterable placeholder="请选择" style="width: 35%" @change="onSelectMsg">
+              <el-option v-for="item in pbmsgs" :key="item" :label="item" :value="item">
+              </el-option>
+            </el-select>
+            分类:
+            <el-select filterable allow-create v-model="classname" filterable placeholder="请选择" style="width: 20%"
+              @change="onSelectMsgClass">
+              <el-option v-for="item in classList" :key="item" :label="item" :value="item">
+              </el-option>
+            </el-select>
+            别名:
+            <el-input v-model="reqname" placeholder="" style="width: 20%" text="123"></el-input>
+
+
+          </div>
+          <div id="dialogjson">
+            <template>
+              <v-jsoneditor ref="editor" v-model="json" :options="options" @error="onError"></v-jsoneditor>
+            </template>
+          </div>
+        </div>
+
+
+        <span slot="footer" class="dialog-footer">
+
+          <el-button @click="show = false">取 消</el-button>
+          <el-button type="primary" @click="ensureCreateReq">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+
+
+    <div id="stress" style="width: 60%">
+      <el-dialog v-bind:title="title" :visible.sync="show" width="30%">
+        <el-form ref="ruleForm" label-width="100px">
+          <el-form-item label="服务器">
+            <el-input size="small" v-model="form.server" autocomplete="off" disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="用例">
+            <el-input size="small" v-model="form.treeName" autocomplete="off" disabled="true"></el-input>
+          </el-form-item>
+
+          <el-form-item label="用户量">
+            <el-input size="small" v-model="form.count" autocomplete="off" type="number"></el-input>
+          </el-form-item>
+
+          <el-form-item label="起始ID">
+            <el-input size="small" v-model="form.start" autocomplete="off" type="number"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button @click="show = false">取 消</el-button>
+            <el-button type="primary" @click="onClick">开 始</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+    </div>
+
+    <div id="zone" style="width: 60%">
+      <el-dialog v-bind:title="title" :visible.sync="show" width="30%">
+        <el-radio-group v-model="radio" size="medium">
+          <el-radio border v-for="zone in zones" :label="zone.name" :key="zone.id" :value="zone.name"
+            @change=onChange(zone)></el-radio>
+        </el-radio-group>
+
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="show = false">取 消</el-button>
+          <el-button type="primary" @click="onClick">确 定</el-button>
+        </span>
+      </el-dialog>
+    </div>
+
+    <div id="btree">
+      <el-dialog :title="title" append-to-body="true" :visible.sync="show" @close="onClose" style="height: auto;"
+        fullscreen="true" lock-scroll="false">
+        <div style="height:100%">
+          <iframe src="editor.html" style="width:100%;height:900px;" scrolling="no" frameborder="0">
+
+          </iframe>
+        </div>
+
+      </el-dialog>
+    </div>
+
+
+</body>
+
+<script src="lib/vue/vue.min.js"></script>
+<script src="lib/vue/elementui.min.js"></script>
+<script src="lib/vjson/v-jsoneditor.min.js"></script>
+
+<script src="js/agent.js"></script>
+<script src="js/log.js"></script>
+<script src="js/conf_editor.js"></script>
+<script src="js/config.js"></script>
+<script src="js/edit_req.js"></script>
+<script src="js/start.js"></script>
+<script src="js/status.js"></script>
+<script src="js/btree.js"></script>
+<script src="js/tabs.js"></script>

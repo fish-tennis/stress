@@ -1,0 +1,9 @@
+{
+    "local": {
+        "server": "127.0.0.1:10002",
+        "account": "test",
+        "region": 1,
+        "device_id": "linux2",
+        "client_version": "0.0.0.0.0.0"
+    }
+}

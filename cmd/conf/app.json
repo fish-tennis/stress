@@ -1,0 +1,5 @@
+{
+    "log_level": "debug",
+    "log_path": "./log",
+    "tick_ms": 1000
+}

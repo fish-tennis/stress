@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <link data-n-head="ssr" rel="icon" type="image/x-icon" href="favicon.png">
+    <title>帮助</title>
+</head>
+
+<style type="text/css">
+    html, body {
+        border: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .main {
+        width: 100%;
+        height: 100%;
+        /*实现水平居中*/
+        position: absolute;
+    }
+
+    .skip {
+        float: right;
+        font-size: 60px;
+        height: 60px;
+        position: relative;
+        bottom: 20px;
+        right: 20px;
+        cursor: pointer;
+        user-select: none;
+        color: green;
+    }
+    .content {
+        position: relative;
+        display: flex;
+        width: 100%;
+        height: 80%;
+        margin-top: 5%;
+        text-align: center;
+        align-items: center;
+        /*实现水平居中*/
+        justify-content: center;
+        /*实现水平居中*/
+    }
+    .prev, .next {
+        display: inline-block;
+        width: 5%;
+        height: 60px;
+        font-size: 60px;
+        flex: 1;
+        cursor: pointer;
+        color: lightgrey;
+        user-select: none;
+    }
+
+    .box {
+        display: inline-block;
+        width: 90%;
+    }
+
+    .image {
+        max-height: 100%;
+        max-width: 100%;
+    }
+</style>
+<body>
+<div class="main">
+    <div class="content">
+        <div class="prev">&lt;</div>
+        <div class="box">
+            <img class="image" src="res/img/client-1.png">
+        </div>
+        <div class="next">&gt;</div>
+    </div>
+    <div class="skip" style="display: none"><a href="/index.html" class="href">&gt;&gt;</a></div>
+</div>
+</body>
+<script src="lib/jquery-1.11.3.min.js" crossorigin></script>
+<script>
+    $ && $(function () {
+        let imgs = [
+            "client-1.png",
+            "client-2.png",
+            "client-3.png",
+            "client-4.png",
+            "client-5.png",
+            "client-6.png",
+            "client-7.png",
+            "client-8.png",
+        ]
+        let $box = $(".box")
+        $box.children().remove()
+        console.log($box[0])
+        let $prev = $(".prev")
+        let $next = $(".next")
+        let cur = 0
+        for (const img of imgs) {
+            $box.append($("<img/>", {class: "image"}).attr("src", "/res/img/" + img).hide())
+        }
+        $(".skip").show()
+        function render(t) {
+            $($box.find("img").get(cur)).slideToggle(t)
+            if (cur === 0) {
+                $prev.css("color", "lightgrey")
+            } else {
+                $prev.css("color", "black")
+            }
+            if (cur === imgs.length - 1) {
+                $next.css("color", "lightgrey")
+            } else {
+                $next.css("color", "black")
+            }
+        }
+
+        render(0)
+        $next.on("click", () => {
+            if (cur < imgs.length - 1) {
+                render(300)
+                cur++
+                render(300)
+            }
+        })
+        $prev.on("click", () => {
+            if (cur > 0) {
+                render(300)
+                cur--
+                render(300)
+            }
+        }).css("color", "lightgray")
+    })
+</script>
+</html>

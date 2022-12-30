@@ -1,0 +1,9 @@
+{
+    "common": {
+        "": {
+            "id": "",
+            "req": "LoginReq",
+            "params": "{\"accountName\":\"test\", \"password\":\"pwd\"}"
+        }
+    }
+}

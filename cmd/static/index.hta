@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>多多自走棋</title>
+    <link data-n-head="ssr" rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/button.css">
+    <link rel="stylesheet" href="css/scroll.css">
+    <link rel="stylesheet" href="css/json.css">
+    <link rel="stylesheet" href="css/input.css">
+    <link rel="stylesheet" href="css/select2.css">
+    <link rel="stylesheet" href="lib/json-editor/jsoneditor.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="app">
+    <div class="status shadow-bottom">&ensp;</div>
+    <div class="log"></div>
+    <div class="operate shadow-left">
+        <div class="header"></div>
+        <div style="margin-top: 8px"><strong>服务器配置</strong></div>
+        <div class="button-group config">
+            <select class="current">
+                <option>DEFAULT</option>
+            </select>
+            <button class="button" act="EditConfig"><i class="fa fa-pencil-square-o" aria-hidden="true"> </i></button>
+            <button class="button" act="DelConfig"><i class="fa fa-trash-o" aria-hidden="true"> </i></button>
+            <button class="button" act="AddConfig"><i class="fa fa-plus-square-o" aria-hidden="true"> </i></button>
+        </div>
+        <div style="margin-top: 8px"><strong>日志</strong></div>
+        <div class="button-group log">
+            <a href="/help.html">帮助</a>
+            <button class="button" act="ClearLog">清除</button>
+            <button class="button" act="FilterList">过滤</button>
+            <button class="button" act="CreateReq">创建请求</button>
+        </div>
+        <div style="margin-top: 8px"><strong>行为树</strong></div>
+        <div class="behavior-trees"></div>
+
+        <div style="margin-top: 8px"><strong>快捷请求</strong></div>
+        <div class="shortcut"></div>
+    </div>
+</div>
+
+<div id="json-editor" style="display: none"></div>
+<div id="log-filter" style="display: none"></div>
+<div id="create-reqs" style="display: none">
+    <select class="reqs"></select>
+    <input type="text" class="req-name">
+    <div class="json-editor"></div>
+</div>
+<div id="stress-test" style="display: none;height: 100%">
+    <div class="input-box">
+        服务器：<input type="text" name="server" readonly="readonly">
+    </div>
+    <div class="input-box">
+    行为树：<input type="text" name="tree" readonly>
+    </div>
+    <div class="input-box">
+    行为树：<input type="text" name="tree_id" readonly>
+    </div>
+    <div class="input-box">
+    用户量：<input type="number" name="count">
+    </div>
+    <div class="input-box">
+    设备号：<input type="text" name="device">
+    </div>
+</div>
+<div id="stress-result" style="display: none">
+</div>
+<div id="tree-nodes" style="display: none">
+    <ul></ul>
+</div>
+<script src="lib/jquery-1.11.3.min.js" crossorigin></script>
+<script src="lib/select2.min.js" crossorigin></script>
+<script src="lib/layer/layer.js" crossorigin></script>
+<script src="lib/json-editor/jsoneditor-minimalist.js" crossorigin></script>
+<script src="js/agent.js" crossorigin></script>
+<script src="js/app.js" crossorigin></script>
+
+</body>
+</html>
