@@ -2,9 +2,9 @@ package network
 
 import (
 	"fmt"
+	"github.com/Gonewithmyself/gobot/pkg/logger"
+	"github.com/Gonewithmyself/gobot/pkg/util"
 	"go.uber.org/zap"
-	"gobot/pkg/logger"
-	"gobot/pkg/util"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"

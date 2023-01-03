@@ -3,8 +3,8 @@ package gamer
 import (
 	"context"
 	"fmt"
+	"github.com/Gonewithmyself/gobot/back"
 	"github.com/fish-tennis/gnet"
-	"gobot/back"
 	"reflect"
 	"stress/network/pb"
 	"stress/types"
