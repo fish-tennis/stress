@@ -2,19 +2,20 @@ package gamer
 
 import (
 	"fmt"
-	"github.com/fish-tennis/gnet"
 	"gobot/pkg/logger"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/protoregistry"
 	"reflect"
 	"stress/network/pb"
 	"strings"
 	"time"
+
+	"github.com/fish-tennis/gnet"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 var _clientHandler *ClientHandler
-var _clientCodec   *gnet.ProtoCodec
+var _clientCodec *gnet.ProtoCodec
 
 type ClientHandler struct {
 	gnet.DefaultConnectionHandler
@@ -28,13 +29,13 @@ func NewClientHandler(protoCodec *gnet.ProtoCodec) *ClientHandler {
 	}
 	handler.RegisterHeartBeat(gnet.PacketCommand(pb.CmdInner_Cmd_HeartBeatReq), func() proto.Message {
 		return &pb.HeartBeatReq{
-			Timestamp: uint64(time.Now().UnixNano()/int64(time.Millisecond)),
+			Timestamp: uint64(time.Now().UnixNano() / int64(time.Millisecond)),
 		}
 	})
 	handler.Register(gnet.PacketCommand(pb.CmdInner_Cmd_HeartBeatRes), func(connection gnet.Connection, packet *gnet.ProtoPacket) {
-	} , new(pb.HeartBeatRes))
+	}, new(pb.HeartBeatRes))
 	handler.SetUnRegisterHandler(func(connection gnet.Connection, packet *gnet.ProtoPacket) {
-		logger.Debug("un register %v", string(packet.Message().ProtoReflect().Descriptor().Name()))
+		logger.Debug(fmt.Sprintf("un register %v", string(packet.Message().ProtoReflect().Descriptor().Name())))
 	})
 	return handler
 }
@@ -74,7 +75,7 @@ func InitClientHandler() {
 			connection.SetTag(nil)
 			g.conn = nil
 		}
-		logger.Debug("client disconnect %v", g.GetAccountName())
+		logger.Debug(fmt.Sprintf("client disconnect %v", g.GetAccountName()))
 	})
 }
 
@@ -95,7 +96,7 @@ func (this *ClientHandler) autoRegister() {
 		messageName := methonArg1.String()[strings.LastIndex(methonArg1.String(), ".")+1:]
 		// 函数名必须是onLoginRes
 		if method.Name != fmt.Sprintf("On%v", messageName) {
-			logger.Debug("methodName not match:%v", method.Name)
+			logger.Debug(fmt.Sprintf("methodName not match:%v", method.Name))
 			continue
 		}
 		// Cmd_LoginRes
@@ -118,6 +119,6 @@ func (this *ClientHandler) autoRegister() {
 		this.methods[cmd] = method
 		// 注册消息的构造函数
 		this.DefaultConnectionHandler.Register(cmd, nil, reflect.New(methonArg1.Elem()).Interface().(proto.Message))
-		logger.Debug("register %v %v", messageId, method.Name)
+		logger.Debug(fmt.Sprintf("register %v %v", messageId, method.Name))
 	}
 }

@@ -42,7 +42,8 @@ let reqhd = new Vue({
         onSelectMsg() {
             // console.log("onSelectMsg", this.msgname, this.json)
             config.client.GetInfo(this.msgname).then((rsp) => {
-                this.json = rsp
+                let obj =  typeof(rsp) == 'string' ? JSON.parse(rsp):rsp
+                this.json = obj
             })
         },
         onSelectMsgClass() {
@@ -58,7 +59,8 @@ let reqhd = new Vue({
             this.pbmsgs = msgs
             this.msgname = msgs[0]
             config.client.GetInfo(this.msgname).then((rsp) => {
-                this.json = rsp
+                let obj =  typeof(rsp) == 'string' ? JSON.parse(rsp):rsp
+                this.json = obj
             })
         },
         SetReqs(reqs) {
