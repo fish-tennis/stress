@@ -148,6 +148,7 @@ func (g *Gamer) OnPlayerEntryGameRes(res *pb.PlayerEntryGameRes) {
 		g.accountId = res.AccountId
 		g.playerId = res.PlayerId
 		g.region = res.RegionId
+		g.playerName = res.PlayerName
 		g.changeStatus("ok")
 		return
 	}

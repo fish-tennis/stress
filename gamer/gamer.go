@@ -18,7 +18,7 @@ type Gamer struct {
 	accountName string // 账号名
 	accountId   int64
 	playerId    int64
-	name        string // 角色名
+	playerName  string // 角色名
 	lvl         int32
 	region      int32 // 区服
 	status      state
@@ -27,13 +27,6 @@ type Gamer struct {
 
 	loginRes           *pb.LoginRes           // 账号登录返回数据
 	playerEntryGameRes *pb.PlayerEntryGameRes // 角色登录返回数据
-}
-
-type Role struct {
-	Name     string
-	Gid      int64
-	Levle    int32
-	ZoneName string
 }
 
 func NewGamer(ctx context.Context, conf *types.LoginConfig) *Gamer {
@@ -90,7 +83,7 @@ func (g *Gamer) ProcessMsg(data interface{}) {
 	//	r := recover()
 	//	if r != nil {
 	//		g.LogError(msgName, fmt.Sprintf("%v", msg))
-	//		logger.Error("procMsg", "name", msgName, "msg", msg)
+	//		logger.Error("procMsg", "playerName", msgName, "msg", msg)
 	//	}
 	//}()
 	//if msg.Pkt == nil {
@@ -116,10 +109,9 @@ func (g *Gamer) changeStatus(status string) {
 	if g.IsOnline() {
 		str = "在线"
 	}
-	g.ChangeStatus(g.name,
+	g.ChangeStatus(g.playerName,
 		status,
-		fmt.Sprintf("id(%v) lvl(%v) region(%v) | %v",
-			g.playerId, g.lvl, g.region, str))
+		fmt.Sprintf("region(%v) | %v", g.region, str))
 }
 
 func (g *Gamer) IsOnline() bool {

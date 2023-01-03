@@ -1,9 +1,11 @@
 {
     "common": {
-        "": {
-            "id": "",
-            "req": "LoginReq",
-            "params": "{\"accountName\":\"test\", \"password\":\"pwd\"}"
+        "coin": {
+            "id": "coin",
+            "req": "CoinReq",
+            "params": {
+                "addCoin": 1
+            }
         }
     }
 }

@@ -93,19 +93,19 @@ func autoRegisterHandler() {
 	//for i := 0; i < tp.NumMethod(); i++ {
 	//	method := tp.Method(i)
 	//	fn := method.Func.Interface()
-	//	name := method.Name
+	//	playerName := method.Name
 	//	switch {
-	//	case strings.HasSuffix(name, "Res"):
+	//	case strings.HasSuffix(playerName, "Res"):
 	//		// 消息回调
-	//		msgtp := proto.MessageType(name)
+	//		msgtp := proto.MessageType(playerName)
 	//		if msgtp == nil {
-	//			panic(fmt.Sprintf("msg(%v)NotFound", name))
+	//			panic(fmt.Sprintf("msg(%v)NotFound", playerName))
 	//		}
 	//		router[msgtp.Elem()] = fn.(func(*Gamer, interface{}))
 	//
-	//	case strings.HasPrefix(name, "Err"):
+	//	case strings.HasPrefix(playerName, "Err"):
 	//		// 错误码回调
-	//		errRouter[name] = fn.(func(*Gamer, string, string))
+	//		errRouter[playerName] = fn.(func(*Gamer, string, string))
 	//	}
 	//}
 }
