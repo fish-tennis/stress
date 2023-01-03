@@ -124,6 +124,7 @@ func (g *Gamer) OnLoginRes(res *pb.LoginRes) {
 		g.conn = nil
 		g.status = stateLoginOk
 		g.accountId = res.AccountId
+		g.accountName = res.AccountName
 	} else {
 		g.conn.SetTag(nil)
 		g.conn.Close()

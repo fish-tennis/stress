@@ -63,6 +63,7 @@ func (g *Gamer) GetUid() string {
 func (g *Gamer) ProcessMsg(data interface{}) {
 	packet := data.(gnet.Packet)
 	if protoPacket, ok := packet.(*gnet.ProtoPacket); ok {
+		g.LogRsp(network.GetMessageNameById(uint16(packet.Command())), packet.Message())
 		handlerMethod, ok2 := _clientHandler.methods[protoPacket.Command()]
 		if ok2 {
 			handlerMethod.Func.Call([]reflect.Value{reflect.ValueOf(g), reflect.ValueOf(protoPacket.Message())})
@@ -70,12 +71,12 @@ func (g *Gamer) ProcessMsg(data interface{}) {
 		}
 	}
 	_clientHandler.DefaultConnectionHandler.OnRecvPacket(g.conn, packet)
-	messageName := network.GetMessageNameById(uint16(packet.Command()))
-	if network.AppPbInfo.HasReqMessage(messageName) {
-		g.LogRsp(messageName, packet.Message())
-	} else {
-		g.LogNtf(messageName, packet.Message())
-	}
+	//messageName := network.GetMessageNameById(uint16(packet.Command()))
+	//if network.AppPbInfo.HasReqMessage(messageName) {
+	//	g.LogRsp(messageName, packet.Message())
+	//} else {
+	//	g.LogNtf(messageName, packet.Message())
+	//}
 }
 
 func (g *Gamer) OnExit() {
@@ -90,7 +91,7 @@ func (g *Gamer) changeStatus(status string) {
 	if g.IsOnline() {
 		str = "在线"
 	}
-	g.ChangeStatus(g.playerName,
+	g.ChangeStatus(g.accountName,
 		status,
 		fmt.Sprintf("region(%v) | %v", g.region, str))
 }
