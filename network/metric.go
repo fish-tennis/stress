@@ -25,7 +25,7 @@ type MetricHandler struct {
 
 func (h *MetricHandler) TransMsgId(id interface{}) string {
 	cmdact := id.(uint16)
-	return GetName(cmdact)
+	return GetMessageNameById(cmdact)
 }
 
 func (h *MetricHandler) GetReportFile() string {

@@ -6,6 +6,7 @@ import (
 	"github.com/Gonewithmyself/gobot/back"
 	"github.com/fish-tennis/gnet"
 	"reflect"
+	"stress/network"
 	"stress/network/pb"
 	"stress/types"
 )
@@ -69,32 +70,12 @@ func (g *Gamer) ProcessMsg(data interface{}) {
 		}
 	}
 	_clientHandler.DefaultConnectionHandler.OnRecvPacket(g.conn, packet)
-	////TODO:统计消息
-	//idx := strings.Index(msgName, "S2C")
-	//if proto.MessageType(msgName[:idx]+"C2S") == nil {
-	//	g.LogNtf(msgName, sc)
-	//} else {
-	//	g.LogRsp(msgName, sc)
-	//}
-
-	//msg := data.(gnet.Packet)
-	//msgName := ""
-	//defer func() {
-	//	r := recover()
-	//	if r != nil {
-	//		g.LogError(msgName, fmt.Sprintf("%v", msg))
-	//		logger.Error("procMsg", "playerName", msgName, "msg", msg)
-	//	}
-	//}()
-	//if msg.Pkt == nil {
-	//	// 第一个包 或者 新加了协议没编译
-	//	logger.Debug("nilPkt", "cmd", msg.Hd.CmdAct())
-	//	return
-	//}
-	//
-	//msgName = reflect.TypeOf(msg.Pkt).Elem().Name()
-	//// logger.Debug("recv", "msg", msgName)
-	//router.Handle(msg, g)
+	messageName := network.GetMessageNameById(uint16(packet.Command()))
+	if network.AppPbInfo.HasReqMessage(messageName) {
+		g.LogRsp(messageName, packet.Message())
+	} else {
+		g.LogNtf(messageName, packet.Message())
+	}
 }
 
 func (g *Gamer) OnExit() {
