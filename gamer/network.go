@@ -2,12 +2,13 @@ package gamer
 
 import (
 	"fmt"
+	"reflect"
+
+	"github.com/Gonewithmyself/gobot/pkg/ratelimit"
 	"github.com/fish-tennis/gnet"
-	"gobot/pkg/ratelimit"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
-	"reflect"
 )
 
 // 收到网络层包 转发到玩家协程

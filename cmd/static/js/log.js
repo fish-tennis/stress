@@ -13,7 +13,7 @@ var ss = `
 
 
 var renderJson = function (obj) {
-    obj = (typeof str == "string") ? this.$.parseJSON(str) : str
+    // obj = (typeof str == "string") ? this.$.parseJSON(str) : str
     let json = JSON.stringify(obj, undefined, 3);
     let reg = /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g
     json = json.replace(/&/g, '&amp;')
@@ -74,6 +74,7 @@ let logbox = new Vue({
             if (meta.tab != 0) {
                  tab = tabs.getById(meta.tab)
             }
+
             tab.logs.unshift(meta)
         },
         clearAll() {

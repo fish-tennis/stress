@@ -1,8 +1,9 @@
 package network
 
 import (
-	"gobot/pkg/metric"
 	"time"
+
+	"github.com/Gonewithmyself/gobot/pkg/metric"
 )
 
 const (
