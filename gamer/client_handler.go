@@ -2,11 +2,12 @@ package gamer
 
 import (
 	"fmt"
-	"gobot/pkg/logger"
 	"reflect"
 	"stress/network/pb"
 	"strings"
 	"time"
+
+	"github.com/Gonewithmyself/gobot/pkg/logger"
 
 	"github.com/fish-tennis/gnet"
 	"google.golang.org/protobuf/proto"

@@ -1,13 +1,15 @@
 package gamer
 
 import (
-	"github.com/fish-tennis/gnet"
-	"go.uber.org/zap"
-	"gobot"
-	"gobot/pkg/btree"
-	"gobot/pkg/logger"
 	"stress/network/pb"
 	"time"
+
+	"github.com/Gonewithmyself/gobot"
+	"github.com/Gonewithmyself/gobot/pkg/btree"
+	"github.com/Gonewithmyself/gobot/pkg/logger"
+
+	"github.com/fish-tennis/gnet"
+	"go.uber.org/zap"
 )
 
 type state int8
@@ -21,19 +23,19 @@ func (s state) String() string {
 
 const (
 	stateIdle           state = iota // 离线
-	stateLogining       // 账号登录中
-	stateLoginOk        // 账号登录成功
-	stateConnectedLogic // 连接上logic
-	stateEntrying       // 角色登录中
-	stateEntryOk        // 角色登录成功
+	stateLogining                    // 账号登录中
+	stateLoginOk                     // 账号登录成功
+	stateConnectedLogic              // 连接上logic
+	stateEntrying                    // 角色登录中
+	stateEntryOk                     // 角色登录成功
 )
 
 func (g *Gamer) getConnectionConfig() *gnet.ConnectionConfig {
 	return &gnet.ConnectionConfig{
 		SendPacketCacheCap: 16,
-		SendBufferSize:     1024*10,
-		RecvBufferSize:     1024*10,
-		MaxPacketSize:      1024*10,
+		SendBufferSize:     1024 * 10,
+		RecvBufferSize:     1024 * 10,
+		MaxPacketSize:      1024 * 10,
 		RecvTimeout:        0,
 		HeartBeatInterval:  5,
 		WriteTimeout:       0,
@@ -54,10 +56,10 @@ func (g *Gamer) LoginAction(node *gobot.Worker, tick *btree.Tick) btree.Status {
 		logger.Error("Connect %v failed", g.loginConf.Server)
 		return btree.ERROR
 	}
-	if !g.conn.Send(gnet.PacketCommand(pb.CmdLogin_Cmd_LoginReq), &pb.LoginReq{
+
+	if !g.SendMsg(&pb.LoginReq{
 		AccountName: g.GetAccountName(),
-		Password: g.GetAccountName(),
-	}) {
+		Password:    g.GetAccountName()}) {
 		logger.Error("LoginReq failed")
 		g.conn.Close()
 		g.conn.SetTag(nil)
@@ -107,13 +109,13 @@ func (g *Gamer) LoginAction(node *gobot.Worker, tick *btree.Tick) btree.Status {
 }
 
 func (g *Gamer) OnLoginRes(res *pb.LoginRes) {
-	logger.Debug("onLoginRes",zap.Any("res", res))
+	logger.Debug("onLoginRes", zap.Any("res", res))
 	if res.Error == "NotReg" {
 		// 自动注册账号
 		// 这里是单纯的测试,账号和密码直接使用明文,实际项目需要做md5之类的处理
-		g.conn.Send(gnet.PacketCommand(pb.CmdLogin_Cmd_AccountReg), &pb.AccountReg{
+		g.SendMsg(&pb.AccountReg{
 			AccountName: g.GetAccountName(),
-			Password: g.GetAccountName(),
+			Password:    g.GetAccountName(),
 		})
 	} else if res.Error == "" {
 		g.loginRes = res
@@ -133,11 +135,14 @@ func (g *Gamer) OnLoginRes(res *pb.LoginRes) {
 func (g *Gamer) OnAccountRes(res *pb.AccountRes) {
 	logger.Debug("onAccountRes", zap.Any("res", res))
 	if res.Error == "" {
-		g.conn.Send(gnet.PacketCommand(pb.CmdLogin_Cmd_LoginReq), &pb.LoginReq{
+		g.SendMsg(&pb.LoginReq{
 			AccountName: g.accountName,
-			Password: g.accountName,
+			Password:    g.accountName,
 		})
 	}
+}
+
+func (g *Gamer) OnCoinRes(res *pb.CoinRes) {
 }
 
 func (g *Gamer) OnPlayerEntryGameRes(res *pb.PlayerEntryGameRes) {
@@ -153,12 +158,12 @@ func (g *Gamer) OnPlayerEntryGameRes(res *pb.PlayerEntryGameRes) {
 	}
 	// 还没角色,则创建新角色
 	if res.Error == "NoPlayer" {
-		g.conn.Send(gnet.PacketCommand(pb.CmdLogin_Cmd_CreatePlayerReq), &pb.CreatePlayerReq{
-			AccountId: g.loginRes.GetAccountId(),
+		g.SendMsg(&pb.CreatePlayerReq{
+			AccountId:    g.loginRes.GetAccountId(),
 			LoginSession: g.loginRes.GetLoginSession(),
-			RegionId: 1,
-			Name: g.accountName,
-			Gender: 1,
+			RegionId:     1,
+			Name:         g.accountName,
+			Gender:       1,
 		})
 		return
 	}
@@ -167,9 +172,9 @@ func (g *Gamer) OnPlayerEntryGameRes(res *pb.PlayerEntryGameRes) {
 		// 延迟重试
 		time.AfterFunc(time.Second, func() {
 			g.conn.Send(gnet.PacketCommand(pb.CmdLogin_Cmd_PlayerEntryGameReq), &pb.PlayerEntryGameReq{
-				AccountId: g.loginRes.GetAccountId(),
+				AccountId:    g.loginRes.GetAccountId(),
 				LoginSession: g.loginRes.GetLoginSession(),
-				RegionId: 1,
+				RegionId:     1,
 			})
 		})
 	}
@@ -187,11 +192,12 @@ func (g *Gamer) EntryAction(node *gobot.Worker, tick *btree.Tick) btree.Status {
 		logger.Error("%v connect game failed", g.GetAccountName())
 		return btree.ERROR
 	}
-	g.conn.Send(gnet.PacketCommand(pb.CmdLogin_Cmd_PlayerEntryGameReq), &pb.PlayerEntryGameReq{
-		AccountId: g.loginRes.GetAccountId(),
+	g.SendMsg(&pb.PlayerEntryGameReq{
+		AccountId:    g.loginRes.GetAccountId(),
 		LoginSession: g.loginRes.GetLoginSession(),
-		RegionId: g.loginConf.Region,
+		RegionId:     g.loginConf.Region,
 	})
+
 	g.status = stateEntrying
 	return btree.SUCCESS
 }

@@ -4,17 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"gobot"
-	"gobot/back"
-	"gobot/pkg/logger"
-	"gobot/pkg/metric"
-	"gobot/pkg/util"
 	"io/ioutil"
 	"path/filepath"
 	"stress/gamer"
 	"stress/network"
 	"stress/types"
 	"time"
+
+	"github.com/Gonewithmyself/gobot"
+	"github.com/Gonewithmyself/gobot/back"
+	"github.com/Gonewithmyself/gobot/pkg/logger"
+	"github.com/Gonewithmyself/gobot/pkg/metric"
+	"github.com/Gonewithmyself/gobot/pkg/util"
 
 	"github.com/fish-tennis/gnet"
 	"go.uber.org/zap/zapcore"
@@ -102,7 +103,7 @@ func (app *App) OnExit(reason string) {
 
 // 根据配置构造玩家
 func (app *App) CreateGamer(confJson string, seq int32) (back.IGamer, error) {
-	loginConf,err := getLoginConf(confJson)
+	loginConf, err := getLoginConf(confJson)
 	if err != nil {
 		return nil, err
 	}

@@ -3,11 +3,14 @@ package gamer
 import (
 	"context"
 	"fmt"
-	"github.com/fish-tennis/gnet"
-	"gobot/back"
 	"reflect"
+	"stress/network"
 	"stress/network/pb"
 	"stress/types"
+
+	"github.com/Gonewithmyself/gobot/back"
+
+	"github.com/fish-tennis/gnet"
 )
 
 // 一个玩家
@@ -69,7 +72,9 @@ func (g *Gamer) GetUid() string {
 func (g *Gamer) ProcessMsg(data interface{}) {
 	packet := data.(gnet.Packet)
 	if protoPacket, ok := packet.(*gnet.ProtoPacket); ok {
+		g.LogRsp(network.GetName(uint16(packet.Command())), packet.Message())
 		handlerMethod, ok2 := _clientHandler.methods[protoPacket.Command()]
+
 		if ok2 {
 			handlerMethod.Func.Call([]reflect.Value{reflect.ValueOf(g), reflect.ValueOf(protoPacket.Message())})
 			return
@@ -116,7 +121,7 @@ func (g *Gamer) changeStatus(status string) {
 	if g.IsOnline() {
 		str = "在线"
 	}
-	g.ChangeStatus(g.name,
+	g.ChangeStatus(g.loginRes.AccountName,
 		status,
 		fmt.Sprintf("id(%v) lvl(%v) region(%v) | %v",
 			g.playerId, g.lvl, g.region, str))

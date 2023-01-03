@@ -19,7 +19,7 @@ body, html {
 .app>.log{
     font-size: 16px;
     width: 75%;
-    height: calc(100% - 45px);
+    height: calc(100% - 90px);
     overflow-y: scroll;
     display: inline-block;
     position: fixed;
