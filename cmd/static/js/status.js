@@ -13,7 +13,7 @@ let bar = new Vue({
             if (data.tab != 0) {
                 bar = tabs.getById(data.tab).statusBar
             }
-            // console.log('changeStatus', data, this.bar)
+            console.log('changeStatus', data, this.bar)
             bar.level = `status-name ${data.status}`
             bar.status = data.name
             bar.info = data.info

@@ -121,7 +121,11 @@ func (g *Gamer) changeStatus(status string) {
 	if g.IsOnline() {
 		str = "在线"
 	}
-	g.ChangeStatus(g.loginRes.AccountName,
+	name := ""
+	if g.loginRes != nil {
+		name = g.loginRes.AccountName
+	}
+	g.ChangeStatus(name,
 		status,
 		fmt.Sprintf("id(%v) lvl(%v) region(%v) | %v",
 			g.playerId, g.lvl, g.region, str))
