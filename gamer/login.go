@@ -124,6 +124,7 @@ func (g *Gamer) OnLoginRes(res *pb.LoginRes) {
 		g.conn = nil
 		g.status = stateLoginOk
 		g.accountId = res.AccountId
+		g.accountName = res.AccountName
 	} else {
 		g.conn.SetTag(nil)
 		g.conn.Close()
@@ -153,7 +154,8 @@ func (g *Gamer) OnPlayerEntryGameRes(res *pb.PlayerEntryGameRes) {
 		g.accountId = res.AccountId
 		g.playerId = res.PlayerId
 		g.region = res.RegionId
-		g.changeStatus("success")
+		g.playerName = res.PlayerName
+		g.changeStatus("ok")
 		return
 	}
 	// 还没角色,则创建新角色

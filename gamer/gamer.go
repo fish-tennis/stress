@@ -3,14 +3,12 @@ package gamer
 import (
 	"context"
 	"fmt"
+	"github.com/Gonewithmyself/gobot/back"
+	"github.com/fish-tennis/gnet"
 	"reflect"
 	"stress/network"
 	"stress/network/pb"
 	"stress/types"
-
-	"github.com/Gonewithmyself/gobot/back"
-
-	"github.com/fish-tennis/gnet"
 )
 
 // 一个玩家
@@ -21,7 +19,7 @@ type Gamer struct {
 	accountName string // 账号名
 	accountId   int64
 	playerId    int64
-	name        string // 角色名
+	playerName  string // 角色名
 	lvl         int32
 	region      int32 // 区服
 	status      state
@@ -30,13 +28,6 @@ type Gamer struct {
 
 	loginRes           *pb.LoginRes           // 账号登录返回数据
 	playerEntryGameRes *pb.PlayerEntryGameRes // 角色登录返回数据
-}
-
-type Role struct {
-	Name     string
-	Gid      int64
-	Levle    int32
-	ZoneName string
 }
 
 func NewGamer(ctx context.Context, conf *types.LoginConfig) *Gamer {
@@ -72,41 +63,20 @@ func (g *Gamer) GetUid() string {
 func (g *Gamer) ProcessMsg(data interface{}) {
 	packet := data.(gnet.Packet)
 	if protoPacket, ok := packet.(*gnet.ProtoPacket); ok {
-		g.LogRsp(network.GetName(uint16(packet.Command())), packet.Message())
+		g.LogRsp(network.GetMessageNameById(uint16(packet.Command())), packet.Message())
 		handlerMethod, ok2 := _clientHandler.methods[protoPacket.Command()]
-
 		if ok2 {
 			handlerMethod.Func.Call([]reflect.Value{reflect.ValueOf(g), reflect.ValueOf(protoPacket.Message())})
 			return
 		}
 	}
 	_clientHandler.DefaultConnectionHandler.OnRecvPacket(g.conn, packet)
-	////TODO:统计消息
-	//idx := strings.Index(msgName, "S2C")
-	//if proto.MessageType(msgName[:idx]+"C2S") == nil {
-	//	g.LogNtf(msgName, sc)
+	//messageName := network.GetMessageNameById(uint16(packet.Command()))
+	//if network.AppPbInfo.HasReqMessage(messageName) {
+	//	g.LogRsp(messageName, packet.Message())
 	//} else {
-	//	g.LogRsp(msgName, sc)
+	//	g.LogNtf(messageName, packet.Message())
 	//}
-
-	//msg := data.(gnet.Packet)
-	//msgName := ""
-	//defer func() {
-	//	r := recover()
-	//	if r != nil {
-	//		g.LogError(msgName, fmt.Sprintf("%v", msg))
-	//		logger.Error("procMsg", "name", msgName, "msg", msg)
-	//	}
-	//}()
-	//if msg.Pkt == nil {
-	//	// 第一个包 或者 新加了协议没编译
-	//	logger.Debug("nilPkt", "cmd", msg.Hd.CmdAct())
-	//	return
-	//}
-	//
-	//msgName = reflect.TypeOf(msg.Pkt).Elem().Name()
-	//// logger.Debug("recv", "msg", msgName)
-	//router.Handle(msg, g)
 }
 
 func (g *Gamer) OnExit() {
@@ -121,14 +91,9 @@ func (g *Gamer) changeStatus(status string) {
 	if g.IsOnline() {
 		str = "在线"
 	}
-	name := ""
-	if g.loginRes != nil {
-		name = g.loginRes.AccountName
-	}
-	g.ChangeStatus(name,
+	g.ChangeStatus(g.accountName,
 		status,
-		fmt.Sprintf("id(%v) lvl(%v) region(%v) | %v",
-			g.playerId, g.lvl, g.region, str))
+		fmt.Sprintf("region(%v) | %v", g.region, str))
 }
 
 func (g *Gamer) IsOnline() bool {

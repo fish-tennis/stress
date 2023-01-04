@@ -1,15 +1,7 @@
 {
     "common": {
-        "登录": {
-            "id": "登录",
-            "req": "LoginReq",
-            "params": {
-                "accountName": "",
-                "password": ""
-            }
-        },
-        "加金币": {
-            "id": "加金币",
+        "coin": {
+            "id": "coin",
             "req": "CoinReq",
             "params": {
                 "addCoin": 1
