@@ -1,7 +1,7 @@
 github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
 github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
-github.com/Gonewithmyself/gobot v0.0.1 h1:cb6qURX5sJnTj1YC3JGo/L01eHVOmld7ONQG1ZmayPQ=
-github.com/Gonewithmyself/gobot v0.0.1/go.mod h1:4VT3VBy/+gFyi62Xsef0+jjMSDNb+EHb8sk9BFBh+3A=
+github.com/Gonewithmyself/gobot v0.0.2 h1:Yb/g4Xf0JgkKmRyNnnyRHeVcdv3DXdG8ZCW+SBABycA=
+github.com/Gonewithmyself/gobot v0.0.2/go.mod h1:4VT3VBy/+gFyi62Xsef0+jjMSDNb+EHb8sk9BFBh+3A=
 github.com/benbjohnson/clock v1.1.0 h1:Q92kusRqC1XV2MjkWETPvjJVqKetz1OzxZB7mHJLju8=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -2,14 +2,14 @@ package network
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/Gonewithmyself/gobot/pkg/logger"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
-	"reflect"
-	"strings"
 )
 
 var AppPbInfo AppPb
@@ -17,18 +17,17 @@ var AppPbInfo AppPb
 // 预处理pb协议
 type AppPb struct {
 	ReqMessageNameList []string // 所有cs消息名
-	ReqCmdTypeMap      map[uint16]reflect.Type
-	ResCmdTypeMap      map[uint16]reflect.Type
 	NameMessageTypeMap map[string]protoreflect.MessageType
 	CmdNameMap         map[uint16]string
+	ResId2Req          map[uint16]uint16 //
 }
 
 func GetMessageNameById(messageId uint16) string {
-	tp, ok := AppPbInfo.ResCmdTypeMap[messageId]
+	name, ok := AppPbInfo.CmdNameMap[messageId]
 	if !ok {
 		return ""
 	}
-	return tp.Name()
+	return name
 }
 
 func (info *AppPb) ListMsg() []string {
@@ -40,7 +39,7 @@ func (info *AppPb) HasReqMessage(resMessageName string) bool {
 	if idx < 0 {
 		return false
 	}
-	if _,ok := info.NameMessageTypeMap[resMessageName[:idx]+"Req"]; ok {
+	if _, ok := info.NameMessageTypeMap[resMessageName[:idx]+"Req"]; ok {
 		return true
 	}
 	return false
@@ -90,11 +89,11 @@ func (info *AppPb) GetCsMsgByJSON(name string, js string) proto.Message {
 }
 
 func (info *AppPb) Init() {
-	info.ReqCmdTypeMap = make(map[uint16]reflect.Type)
-	info.ResCmdTypeMap = make(map[uint16]reflect.Type)
+	info.ResId2Req = make(map[uint16]uint16)
 	info.NameMessageTypeMap = make(map[string]protoreflect.MessageType)
 	info.CmdNameMap = make(map[uint16]string)
 
+	name2IdMap := make(map[string]uint16)
 	protoregistry.GlobalFiles.RangeFiles(func(fileDescriptor protoreflect.FileDescriptor) bool {
 		for i := 0; i < fileDescriptor.Messages().Len(); i++ {
 			messageDescriptor := fileDescriptor.Messages().Get(i)
@@ -121,18 +120,20 @@ func (info *AppPb) Init() {
 			if err != nil {
 				continue
 			}
-			elem := messageType.New()
-			typ := reflect.TypeOf(elem).Elem()
-			if strings.HasSuffix(messageName, "Req") {
-				info.ReqCmdTypeMap[uint16(messageId)] = typ
-			} else {
-				info.ResCmdTypeMap[uint16(messageId)] = typ
-			}
+
 			info.ReqMessageNameList = append(info.ReqMessageNameList, messageName)
 			info.NameMessageTypeMap[messageName] = messageType
 			info.CmdNameMap[uint16(messageId)] = messageName
+			name2IdMap[messageName] = uint16(messageId)
 			//logger.Debug("messageDescriptor", zap.Int32("messageId", messageId), zap.String("name", messageName))
 		}
 		return true
 	})
+
+	for msgName, msgId := range name2IdMap {
+		if strings.HasSuffix(msgName, "Res") {
+			reqName := strings.TrimSuffix(msgName, "Res") + "Req"
+			info.ResId2Req[msgId] = name2IdMap[reqName]
+		}
+	}
 }

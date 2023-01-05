@@ -3,6 +3,8 @@ package gamer
 import (
 	"fmt"
 	"reflect"
+	"stress/network"
+	"time"
 
 	"github.com/Gonewithmyself/gobot/pkg/ratelimit"
 	"github.com/fish-tennis/gnet"
@@ -42,7 +44,8 @@ func (g *Gamer) SendMsg(msg proto.Message) bool {
 	}
 
 	if g.conn.Send(gnet.PacketCommand(messageId), msg) {
-		g.LogReq(tp.Name(), msg)
+		// network.GetRecorder()
+		g.LogReq(uint16(messageId), tp.Name(), msg)
 		return true
 	}
 
@@ -109,4 +112,35 @@ func autoRegisterHandler() {
 	//		errRouter[playerName] = fn.(func(*Gamer, string, string))
 	//	}
 	//}
+}
+
+// 记录请求消息
+func (g *Gamer) LogReq(msgId uint16, msgName string, msg interface{}) {
+	g.Gamer.LogReq(msgName, msg) // 显示到日志区
+
+	g.rttmap[msgId] = time.Now().UnixNano() // 记录请求发送时间
+	rec := network.GetRecorder(msgId)
+	rec.UpCounter.Inc(1)
+}
+
+// 记录响应消息
+func (g *Gamer) LogRes(msgId uint16, msgName string, msg interface{}) {
+	now := time.Now().UnixNano()
+	g.Gamer.LogRsp(msgName, msg)
+
+	reqMsgId, ok := network.AppPbInfo.ResId2Req[msgId]
+	if !ok {
+		return
+	}
+
+	rec := network.GetRecorder(reqMsgId)
+	rec.DownCounter.Inc(1)
+	reqTs := g.rttmap[reqMsgId]
+	if reqTs == 0 {
+		return
+	}
+
+	rtt := now - reqTs
+	rec.RTTRecorder.Update(time.Nanosecond * time.Duration(rtt))
+	g.rttmap[reqMsgId] = 0
 }
