@@ -4,13 +4,13 @@
     "data": {
         "version": "0.3.0",
         "scope": "project",
-        "selectedTree": "093ac47a-da42-422f-b8de-e4f0d88c755e",
+        "selectedTree": "9ca21362-bc20-41f8-9074-2d9a10a7703e",
         "trees": [
             {
                 "version": "0.3.0",
                 "scope": "tree",
                 "id": "093ac47a-da42-422f-b8de-e4f0d88c755e",
-                "title": "01 登陆",
+                "title": "login",
                 "description": "",
                 "root": "8d33cb70-7ca3-410e-8efe-891e4b958b6a",
                 "properties": {
@@ -99,18 +99,85 @@
                     "x": -156,
                     "y": -96
                 }
+            },
+            {
+                "version": "0.3.0",
+                "scope": "tree",
+                "id": "9ca21362-bc20-41f8-9074-2d9a10a7703e",
+                "title": "test",
+                "description": "",
+                "root": "73cc2294-1524-4086-86c8-c0d679b109e2",
+                "properties": {},
+                "nodes": {
+                    "a3107dec-e1b2-4c73-8b8d-39afe85c9c99": {
+                        "id": "a3107dec-e1b2-4c73-8b8d-39afe85c9c99",
+                        "name": "093ac47a-da42-422f-b8de-e4f0d88c755e",
+                        "category": "tree",
+                        "title": "login",
+                        "description": "",
+                        "properties": {},
+                        "display": {
+                            "x": -252,
+                            "y": -252
+                        }
+                    },
+                    "259a56ac-52b4-499b-b3ea-4ace6106ddb4": {
+                        "id": "259a56ac-52b4-499b-b3ea-4ace6106ddb4",
+                        "name": "Rand",
+                        "category": "composite",
+                        "title": "Rand",
+                        "description": "随机节点",
+                        "properties": {},
+                        "display": {
+                            "x": -276,
+                            "y": 24
+                        },
+                        "children": [
+                            "8eba0e30-da47-4a20-8763-79fd10b2a822"
+                        ]
+                    },
+                    "73cc2294-1524-4086-86c8-c0d679b109e2": {
+                        "id": "73cc2294-1524-4086-86c8-c0d679b109e2",
+                        "name": "Sequence",
+                        "category": "composite",
+                        "title": "Sequence",
+                        "description": "",
+                        "properties": {},
+                        "display": {
+                            "x": -420,
+                            "y": -120
+                        },
+                        "children": [
+                            "a3107dec-e1b2-4c73-8b8d-39afe85c9c99",
+                            "259a56ac-52b4-499b-b3ea-4ace6106ddb4"
+                        ]
+                    },
+                    "8eba0e30-da47-4a20-8763-79fd10b2a822": {
+                        "id": "8eba0e30-da47-4a20-8763-79fd10b2a822",
+                        "name": "Worker",
+                        "category": "action",
+                        "title": "AddCoin",
+                        "description": "加钱",
+                        "properties": {
+                            "cd": 0,
+                            "value": 1
+                        },
+                        "display": {
+                            "x": -72,
+                            "y": -96
+                        }
+                    }
+                },
+                "display": {
+                    "camera_x": 935,
+                    "camera_y": 450,
+                    "camera_z": 1,
+                    "x": -540,
+                    "y": -120
+                }
             }
         ],
         "custom_nodes": [
-            {
-                "version": "0.3.0",
-                "scope": "node",
-                "name": "RandMem",
-                "category": "composite",
-                "title": "Rand",
-                "description": null,
-                "properties": {}
-            },
             {
                 "version": "0.3.0",
                 "scope": "node",
@@ -141,6 +208,15 @@
                 "properties": {
                     "cd": 0
                 }
+            },
+            {
+                "version": "0.3.0",
+                "scope": "node",
+                "name": "RandMem",
+                "category": "composite",
+                "title": "RandMem",
+                "description": null,
+                "properties": {}
             }
         ]
     },
