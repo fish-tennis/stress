@@ -14,7 +14,6 @@ import (
 	"github.com/Gonewithmyself/gobot"
 	"github.com/Gonewithmyself/gobot/back"
 	"github.com/Gonewithmyself/gobot/pkg/logger"
-	"github.com/Gonewithmyself/gobot/pkg/metric"
 	"github.com/Gonewithmyself/gobot/pkg/util"
 
 	"github.com/fish-tennis/gnet"
@@ -52,8 +51,7 @@ func main() {
 	network.AppPbInfo.Init()
 	gamer.InitClientHandler()
 
-	metric.Start(&network.MetricHandler{})
-	defer metric.Stop()
+	defer network.Report() // 输出指标信息
 	// 开始运行
 	gobot.RunApp(
 		ctx,
@@ -155,7 +153,7 @@ func (app *App) PrintStressStatus() {
 		}
 	}
 
-	status.MetricData = metric.Status()
+	status.MetricData = network.Status()
 	app.UI.Print("压测状态", status)
 	app.UI.UIChangeStatus(0, "压测中", "success",
 		fmt.Sprintf("online(%v) total(%v)", status.Online, status.Total))

@@ -155,7 +155,7 @@ func (g *Gamer) OnPlayerEntryGameRes(res *pb.PlayerEntryGameRes) {
 		g.playerId = res.PlayerId
 		g.region = res.RegionId
 		g.playerName = res.PlayerName
-		g.changeStatus("ok")
+		g.changeStatus("success")
 		return
 	}
 	// 还没角色,则创建新角色

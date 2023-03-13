@@ -3,12 +3,13 @@ package gamer
 import (
 	"context"
 	"fmt"
-	"github.com/Gonewithmyself/gobot/back"
-	"github.com/fish-tennis/gnet"
 	"reflect"
 	"stress/network"
 	"stress/network/pb"
 	"stress/types"
+
+	"github.com/Gonewithmyself/gobot/back"
+	"github.com/fish-tennis/gnet"
 )
 
 // 一个玩家
@@ -28,6 +29,7 @@ type Gamer struct {
 
 	loginRes           *pb.LoginRes           // 账号登录返回数据
 	playerEntryGameRes *pb.PlayerEntryGameRes // 角色登录返回数据
+	rttmap             map[uint16]int64       // msgid -> 请求发送时间
 }
 
 func NewGamer(ctx context.Context, conf *types.LoginConfig) *Gamer {
@@ -37,6 +39,7 @@ func NewGamer(ctx context.Context, conf *types.LoginConfig) *Gamer {
 		accountName: account,
 		Gamer:       back.NewGamer(),
 		ctx:         ctx,
+		rttmap:      map[uint16]int64{},
 	}
 }
 
@@ -47,6 +50,7 @@ func NewGamerBySeq(ctx context.Context, seq int32, conf *types.LoginConfig) *Gam
 		accountName: fmt.Sprintf("%v_%v", conf.Account, seq),
 		Gamer:       back.NewGamer(),
 		ctx:         ctx,
+		rttmap:      map[uint16]int64{},
 	}
 }
 
@@ -63,7 +67,7 @@ func (g *Gamer) GetUid() string {
 func (g *Gamer) ProcessMsg(data interface{}) {
 	packet := data.(gnet.Packet)
 	if protoPacket, ok := packet.(*gnet.ProtoPacket); ok {
-		g.LogRsp(network.GetMessageNameById(uint16(packet.Command())), packet.Message())
+		g.LogRes(uint16(packet.Command()), network.GetMessageNameById(uint16(packet.Command())), packet.Message())
 		handlerMethod, ok2 := _clientHandler.methods[protoPacket.Command()]
 		if ok2 {
 			handlerMethod.Func.Call([]reflect.Value{reflect.ValueOf(g), reflect.ValueOf(protoPacket.Message())})
